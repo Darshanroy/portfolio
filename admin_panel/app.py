@@ -80,8 +80,8 @@ def send_resume():
         msg = MIMEMultipart()
         msg['From'] = SENDER_EMAIL
         msg['To'] = user_email
-        msg['Subject'] = "John Doe - Resume"
-        body = "Hello,\n\nThank you for your interest! Please find my resume attached or linked here: [Link to Resume]\n\nBest,\nJohn Doe"
+        msg['Subject'] = "Darshan kumar - Resume"
+        body = "Hello,\n\nThank you for your interest! Please find my resume attached or linked here: [Link to Resume]\n\nBest,\nDarshan kumar"
         msg.attach(MIMEText(body, 'plain'))
         
         # Create the notification message for the admin
