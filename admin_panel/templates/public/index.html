@@ -1,7 +1,7 @@
 {% extends "public/layout.html" %}
 
 {% block content %}
-<div class="mx-auto max-w-5xl px-6 py-12 space-y-16">
+<div class="w-full">
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -16,213 +16,227 @@
     {% endwith %}
 
     <!-- Header -->
-    <section class="grid grid-cols-1 gap-8 md:grid-cols-[120px_1fr]">
-        <div class="flex h-[120px] w-[120px] items-center justify-center rounded-full bg-gray-100 text-gray-400 border border-gray-200">
-            <!-- Simple Avatar Placeholder -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </div>
-        <div class="flex flex-col justify-center">
-            <div class="flex items-center gap-4 mb-2">
-                <h1 class="text-4xl font-semibold tracking-tight">Darshan kumar</h1>
-                <div class="h-1 w-1 rounded-full bg-gray-300"></div>
-                <span class="font-mono text-xs text-gray-400">Systems Engineer</span>
+    <section class="min-h-[100dvh] snap-start flex flex-col justify-center pt-20 pb-12">
+        <div class="mx-auto max-w-5xl w-full px-6 grid grid-cols-1 gap-8 md:grid-cols-[120px_1fr]">
+            <div class="flex h-[120px] w-[120px] items-center justify-center rounded-full bg-gray-100 text-gray-400 border border-gray-200">
+                <!-- Simple Avatar Placeholder -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
-            <p class="max-w-2xl text-lg text-gray-500 leading-relaxed font-light">
-                Specializing in high-performance distributed systems, low-latency architectures, and reliable infrastructure scaling.
-            </p>
+            <div class="flex flex-col justify-center">
+                <div class="flex items-center gap-4 mb-2">
+                    <h1 class="text-4xl sm:text-6xl font-semibold tracking-tight">Darshan kumar</h1>
+                    <div class="h-1 w-1 rounded-full bg-gray-300"></div>
+                    <span class="font-mono text-xs text-gray-400">Systems Engineer</span>
+                </div>
+                <p class="max-w-2xl text-lg sm:text-xl text-gray-500 leading-relaxed font-light mt-4">
+                    Specializing in high-performance distributed systems, low-latency architectures, and reliable infrastructure scaling.
+                </p>
+            </div>
         </div>
     </section>
 
     <!-- Skills (Moved to First) -->
-    <section id="skills">
-        <div class="mb-6 flex items-center justify-between border-b border-gray-100 pb-2">
-            <h2 class="font-mono text-xs uppercase tracking-widest text-gray-400">core technical skills</h2>
-        </div>
-        <div class="flex flex-wrap gap-3">
-            {% for skill in skills %}
-            <div class="px-4 py-2 border border-gray-100 bg-gray-50/30 text-sm font-medium transition-colors hover:border-black hover:bg-white cursor-default">
-                {{ skill.title }}
+    <section id="skills" class="min-h-[100dvh] snap-start flex flex-col justify-center pt-20 pb-12">
+        <div class="mx-auto max-w-5xl w-full px-6">
+            <div class="mb-8 flex items-center justify-between border-b border-gray-100 pb-4">
+                <h2 class="font-mono text-sm uppercase tracking-widest text-gray-400">core technical skills</h2>
             </div>
-            {% endfor %}
+            <div class="flex flex-wrap gap-4">
+                {% for skill in skills %}
+                <div class="px-6 py-3 border border-gray-100 bg-gray-50/30 text-base font-medium transition-colors hover:border-black hover:bg-white cursor-default">
+                    {{ skill.title }}
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </section>
 
     <!-- Projects (Second, styled like blogs with a fade slider) -->
-    <section id="projects">
-        <div class="mb-6 flex items-center justify-between border-b border-gray-100 pb-2">
-            <h2 class="font-mono text-xs uppercase tracking-widest text-gray-400">case studies & engineering projects</h2>
-            <div class="flex gap-4">
-                <button id="prev-project" class="text-gray-400 hover:text-black transition-colors">&larr;</button>
-                <button id="next-project" class="text-gray-400 hover:text-black transition-colors">&rarr;</button>
-            </div>
-        </div>
-        
-        <!-- Carousel Container -->
-        <div class="relative h-[300px] w-full" id="projects-carousel">
-            {% for project in projects %}
-            <div class="project-slide absolute inset-0 transition-all duration-700 ease-in-out {% if loop.index0 == 0 %}opacity-100 translate-x-0 z-10{% else %}opacity-0 translate-x-4 z-0 pointer-events-none{% endif %}" data-index="{{ loop.index0 }}">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-                    <!-- Project Box (Styled like blog) -->
-                    <a href="{{ url_for('public_project_detail', project_id=project.id) }}" class="block h-full group col-span-1 md:col-span-2">
-                        <div class="bg-white border border-gray-100 p-8 flex flex-col justify-between group overflow-hidden h-[300px] hover:shadow-lg transition-shadow duration-300 relative">
-                            <div class="flex justify-between items-start z-10">
-                                <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-1 border border-black text-black bg-gray-50/50 backdrop-blur-sm">
-                                    PROJECT
-                                </span>
-                                <div class="h-1 w-1 rounded-full bg-black scale-0 group-hover:scale-100 transition-transform"></div>
-                            </div>
-                            
-                            <div class="space-y-3 z-10 relative">
-                                <h3 class="text-4xl font-medium leading-tight tracking-tight text-black group-hover:text-black/80 transition-colors max-w-2xl">
-                                    {{ project.name }}
-                                </h3>
-                                <p class="text-sm text-gray-500 font-light max-w-3xl line-clamp-2">
-                                    {{ project.summary }}
-                                </p>
-                                <p class="text-[10px] uppercase font-mono tracking-widest text-gray-400 pt-4">
-                                    Architecture &bull; Metrics &bull; Impact
-                                </p>
-                            </div>
-
-                            <!-- Decorative background image if project has images -->
-                            {% if project.get_images() %}
-                            <div class="absolute right-0 bottom-0 top-0 w-1/3 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity duration-500">
-                                <img src="{{ project.get_images()[0] }}" class="w-full h-full object-cover" alt="">
-                            </div>
-                            {% endif %}
-                        </div>
-                    </a>
+    <section id="projects" class="min-h-[100dvh] snap-start flex flex-col justify-center pt-20 pb-12">
+        <div class="mx-auto max-w-5xl w-full px-6 flex flex-col h-full">
+            <div class="mb-6 flex items-center justify-between border-b border-gray-100 pb-4">
+                <h2 class="font-mono text-sm uppercase tracking-widest text-gray-400">case studies & engineering projects</h2>
+                <div class="flex gap-4">
+                    <button id="prev-project" class="text-gray-400 hover:text-black transition-colors text-xl">&larr;</button>
+                    <button id="next-project" class="text-gray-400 hover:text-black transition-colors text-xl">&rarr;</button>
                 </div>
             </div>
-            {% endfor %}
+            
+            <!-- Carousel Container -->
+            <div class="relative flex-grow min-h-[60vh] w-full" id="projects-carousel">
+                {% for project in projects %}
+                <div class="project-slide absolute inset-0 transition-all duration-700 ease-in-out {% if loop.index0 == 0 %}opacity-100 translate-x-0 z-10{% else %}opacity-0 translate-x-4 z-0 pointer-events-none{% endif %}" data-index="{{ loop.index0 }}">
+                    <div class="h-full">
+                        <!-- Project Box -->
+                        <a href="{{ url_for('public_project_detail', project_id=project.id) }}" class="block h-full group">
+                            <div class="bg-white border border-gray-100 p-10 sm:p-16 flex flex-col justify-between group overflow-hidden h-full hover:shadow-xl transition-shadow duration-300 relative">
+                                <div class="flex justify-between items-start z-10">
+                                    <span class="text-xs font-mono uppercase tracking-widest px-3 py-1.5 border border-black text-black bg-white/80 backdrop-blur-sm">
+                                        PROJECT
+                                    </span>
+                                    <div class="h-1.5 w-1.5 rounded-full bg-black scale-0 group-hover:scale-100 transition-transform"></div>
+                                </div>
+                                
+                                <div class="space-y-6 z-10 relative mt-auto">
+                                    <h3 class="text-5xl sm:text-6xl font-medium leading-tight tracking-tight text-black group-hover:text-black/80 transition-colors max-w-3xl">
+                                        {{ project.name }}
+                                    </h3>
+                                    <p class="text-lg sm:text-xl text-gray-600 font-light max-w-4xl line-clamp-3">
+                                        {{ project.summary }}
+                                    </p>
+                                    <p class="text-xs uppercase font-mono tracking-widest text-gray-400 pt-6">
+                                        Architecture &bull; Metrics &bull; Impact
+                                    </p>
+                                </div>
+
+                                <!-- Decorative background image -->
+                                {% if project.get_images() %}
+                                <div class="absolute right-0 bottom-0 top-0 w-1/2 opacity-10 pointer-events-none group-hover:opacity-20 transition-opacity duration-700">
+                                    <img src="{{ project.get_images()[0] }}" class="w-full h-full object-cover object-left" alt="">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </section>
 
-    <!-- Blogs / Learnings (Third) with Exact Box Layout -->
-    <section id="blog">
-        <div class="mb-6 flex items-center justify-between border-b border-gray-100 pb-2">
-            <h2 class="font-mono text-xs uppercase tracking-widest text-gray-400">technical blog & research</h2>
-            <a href="{{ url_for('public_blog_list') }}" class="text-[10px] font-mono uppercase tracking-widest text-black hover:text-gray-500 transition-colors">View All &rarr;</a>
-        </div>
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {% for item in blogs[:2] %}
-            <a href="{% if item.type == 'learning' %}{{ url_for('public_learning_detail', learning_id=item.id) }}{% else %}#{% endif %}" class="block h-full group">
-                <div class="bg-white border border-gray-100 p-8 flex flex-col justify-between group overflow-hidden h-[300px] hover:shadow-lg transition-shadow duration-300">
-                    <div class="flex justify-between items-start">
-                        <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-1 border {{ 'border-orange-100 text-orange-400 bg-orange-50/30' if item.type == 'blog' else 'border-blue-100 text-blue-400 bg-blue-50/30' }}">
-                            {{ item.type }}
-                        </span>
-                        <div class="h-1 w-1 rounded-full bg-black scale-0 group-hover:scale-100 transition-transform"></div>
+    <!-- Blogs / Learnings (Third) -->
+    <section id="blog" class="min-h-[100dvh] snap-start flex flex-col justify-center pt-20 pb-12">
+        <div class="mx-auto max-w-5xl w-full px-6 flex flex-col h-full">
+            <div class="mb-6 flex items-center justify-between border-b border-gray-100 pb-4">
+                <h2 class="font-mono text-sm uppercase tracking-widest text-gray-400">technical blog & research</h2>
+                <a href="{{ url_for('public_blog_list') }}" class="text-xs font-mono uppercase tracking-widest text-black hover:text-gray-500 transition-colors">View All &rarr;</a>
+            </div>
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 flex-grow min-h-[50vh]">
+                {% for item in blogs[:2] %}
+                <a href="{% if item.type == 'learning' %}{{ url_for('public_learning_detail', learning_id=item.id) }}{% else %}#{% endif %}" class="block h-full group">
+                    <div class="bg-white border border-gray-100 p-10 flex flex-col justify-between group overflow-hidden h-full hover:shadow-lg transition-shadow duration-300">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-mono uppercase tracking-widest px-3 py-1.5 border {{ 'border-orange-100 text-orange-400 bg-orange-50/30' if item.type == 'blog' else 'border-blue-100 text-blue-400 bg-blue-50/30' }}">
+                                {{ item.type }}
+                            </span>
+                            <div class="h-1.5 w-1.5 rounded-full bg-black scale-0 group-hover:scale-100 transition-transform"></div>
+                        </div>
+                        <div class="space-y-4 mt-12">
+                            <h3 class="text-4xl font-medium leading-tight tracking-tight text-black group-hover:text-black/80 transition-colors">
+                                {{ item.title }}
+                            </h3>
+                            {% if item.date %}
+                            <p class="text-sm font-mono text-gray-400">{{ item.date }}</p>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="space-y-3">
-                        <h3 class="text-3xl font-medium leading-tight tracking-tight text-black group-hover:text-black/80 transition-colors">
-                            {{ item.title }}
-                        </h3>
-                        {% if item.date %}
-                        <p class="text-xs font-mono text-gray-400">{{ item.date }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
+                </a>
+                {% endfor %}
+            </div>
         </div>
     </section>
 
     <!-- Achievements (Last) -->
-    <section id="achievements">
-        <div class="mb-6 flex items-center justify-between border-b border-gray-100 pb-2">
-            <h2 class="font-mono text-xs uppercase tracking-widest text-gray-400">achievements & recognitions</h2>
-            <a href="{{ url_for('public_achievement_list') }}" class="text-[10px] font-mono uppercase tracking-widest text-black hover:text-gray-500 transition-colors">View All &rarr;</a>
-        </div>
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {% for achievement in achievements %}
-            <div class="relative p-8 border border-gray-100 bg-white hover:border-black transition-all group">
-                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity">
-                    <span class="font-mono text-[40px] font-bold leading-none select-none">
-                        {{ achievement.date[-2:] if achievement.date else '' }}
-                    </span>
-                </div>
-                <div class="space-y-4">
-                    <div class="h-6 w-6 rounded-full bg-black/5 flex items-center justify-center">
-                        <div class="h-2 w-2 rounded-full bg-black"></div>
+    <section id="achievements" class="min-h-[100dvh] snap-start flex flex-col justify-center pt-20 pb-12">
+        <div class="mx-auto max-w-5xl w-full px-6">
+            <div class="mb-6 flex items-center justify-between border-b border-gray-100 pb-4">
+                <h2 class="font-mono text-sm uppercase tracking-widest text-gray-400">achievements & recognitions</h2>
+                <a href="{{ url_for('public_achievement_list') }}" class="text-xs font-mono uppercase tracking-widest text-black hover:text-gray-500 transition-colors">View All &rarr;</a>
+            </div>
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+                {% for achievement in achievements %}
+                <div class="relative p-8 border border-gray-100 bg-white hover:border-black transition-all group h-[300px] flex flex-col">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity">
+                        <span class="font-mono text-5xl font-bold leading-none select-none">
+                            {{ achievement.date[-2:] if achievement.date else '' }}
+                        </span>
                     </div>
-                    <div class="space-y-1">
-                        <h3 class="text-xl font-semibold tracking-tight leading-tight">
-                            {{ achievement.title }}
-                        </h3>
-                        <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">
-                            {{ achievement.issuer }} &bull; {{ achievement.date }}
+                    <div class="space-y-4 flex-grow">
+                        <div class="h-6 w-6 rounded-full bg-black/5 flex items-center justify-center">
+                            <div class="h-2 w-2 rounded-full bg-black"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="text-2xl font-semibold tracking-tight leading-tight">
+                                {{ achievement.title }}
+                            </h3>
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">
+                                {{ achievement.issuer }} &bull; {{ achievement.date }}
+                            </p>
+                        </div>
+                        <p class="text-sm text-gray-500 leading-relaxed font-light line-clamp-3">
+                            {{ achievement.description }}
                         </p>
                     </div>
-                    <p class="text-sm text-gray-500 leading-relaxed font-light">
-                        {{ achievement.description }}
-                    </p>
                     {% if achievement.link_url %}
-                    <a href="{{ achievement.link_url }}" target="_blank" class="inline-block mt-2 text-[10px] font-mono uppercase tracking-widest text-black hover:text-gray-500 transition-colors border-b border-black hover:border-gray-500 pb-0.5">
-                        View Certificate &nearr;
-                    </a>
+                    <div class="mt-4 pt-4 border-t border-gray-50">
+                        <a href="{{ achievement.link_url }}" target="_blank" class="inline-block text-[10px] font-mono uppercase tracking-widest text-black hover:text-gray-500 transition-colors border-b border-black hover:border-gray-500 pb-0.5">
+                            View Certificate &nearr;
+                        </a>
+                    </div>
                     {% endif %}
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact">
-        <div class="mb-6 flex items-center justify-between border-b border-gray-100 pb-2">
-            <h2 class="font-mono text-xs uppercase tracking-widest text-gray-400">get in touch & resume</h2>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Direct Contact Box -->
-            <div class="border border-gray-100 bg-white p-8 hover:border-black transition-colors duration-300 flex flex-col justify-between">
-                <div>
-                    <h3 class="text-xl font-semibold tracking-tight leading-tight mb-4">Let's Connect</h3>
-                    <p class="text-sm text-gray-500 leading-relaxed font-light mb-8">
-                        Feel free to reach out directly via WhatsApp or Email. I'm always open to discussing new opportunities or collaborating on interesting engineering problems.
-                    </p>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="https://wa.me/1234567890" target="_blank" 
-                        class="inline-flex items-center justify-center px-6 py-3 border border-black bg-black text-xs font-mono uppercase tracking-widest text-white hover:bg-transparent hover:text-black transition-colors">
-                        WhatsApp &nearr;
-                    </a>
-                    <a href="mailto:Darshankumarr03@gmail.com" 
-                        class="inline-flex items-center justify-center px-6 py-3 border border-gray-200 bg-transparent text-xs font-mono uppercase tracking-widest text-black hover:border-black transition-colors">
-                        Email &nearr;
-                    </a>
-                    <a href="#" target="_blank"
-                        class="inline-flex items-center justify-center px-6 py-3 border border-gray-200 bg-transparent text-xs font-mono uppercase tracking-widest text-black hover:border-black transition-colors">
-                        View Resume &darr;
-                    </a>
-                </div>
+    <section id="contact" class="min-h-[100dvh] snap-start flex flex-col justify-center pt-20 pb-12">
+        <div class="mx-auto max-w-5xl w-full px-6 flex flex-col h-full">
+            <div class="mb-6 flex items-center justify-between border-b border-gray-100 pb-4">
+                <h2 class="font-mono text-sm uppercase tracking-widest text-gray-400">get in touch & resume</h2>
             </div>
-
-            <!-- Auto Resume Box -->
-            <div class="border border-gray-100 bg-white p-8 hover:border-black transition-colors duration-300 flex flex-col justify-between group">
-                <div>
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-xl font-semibold tracking-tight leading-tight">Request Resume</h3>
-                        <div class="h-2 w-2 rounded-full bg-black scale-0 group-hover:scale-100 transition-transform"></div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow min-h-[50vh]">
+                <!-- Direct Contact Box -->
+                <div class="border border-gray-100 bg-white p-10 flex flex-col justify-between hover:border-black transition-colors duration-300">
+                    <div>
+                        <h3 class="text-3xl font-medium tracking-tight leading-tight mb-6">Let's Connect</h3>
+                        <p class="text-base text-gray-500 leading-relaxed font-light mb-8">
+                            Feel free to reach out directly via WhatsApp or Email. I'm always open to discussing new opportunities or collaborating on interesting engineering problems.
+                        </p>
                     </div>
-                    <p class="text-sm text-gray-500 leading-relaxed font-light mb-8">
-                        Enter your email address below to instantly receive a copy of my technical resume via automated email.
-                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-auto">
+                        <a href="https://wa.me/1234567890" target="_blank" 
+                            class="inline-flex items-center justify-center px-6 py-4 border border-black bg-black text-sm font-mono uppercase tracking-widest text-white hover:bg-transparent hover:text-black transition-colors">
+                            WhatsApp &nearr;
+                        </a>
+                        <a href="mailto:Darshankumarr03@gmail.com" 
+                            class="inline-flex items-center justify-center px-6 py-4 border border-gray-200 bg-transparent text-sm font-mono uppercase tracking-widest text-black hover:border-black transition-colors">
+                            Email &nearr;
+                        </a>
+                        <a href="#" target="_blank"
+                            class="inline-flex items-center justify-center px-6 py-4 border border-gray-200 bg-transparent text-sm font-mono uppercase tracking-widest text-black hover:border-black transition-colors">
+                            View Resume &darr;
+                        </a>
+                    </div>
                 </div>
-                
-                <form action="{{ url_for('send_resume') }}" method="POST" class="space-y-6">
-                    <div class="space-y-2">
-                        <label for="resume-email" class="block font-mono text-[10px] uppercase tracking-widest text-black">Your Email</label>
-                        <input type="email" id="resume-email" name="email" required
-                            class="w-full border-b border-gray-200 bg-transparent px-0 py-2 text-sm text-black placeholder-gray-300 focus:border-black focus:outline-none transition-colors"
-                            placeholder="Enter email to receive resume">
+
+                <!-- Auto Resume Box -->
+                <div class="border border-gray-100 bg-white p-10 flex flex-col justify-between group hover:border-black transition-colors duration-300">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="text-3xl font-medium tracking-tight leading-tight">Request Resume</h3>
+                            <div class="h-2 w-2 rounded-full bg-black scale-0 group-hover:scale-100 transition-transform"></div>
+                        </div>
+                        <p class="text-base text-gray-500 leading-relaxed font-light mb-8">
+                            Enter your email address below to instantly receive a copy of my technical resume via automated email.
+                        </p>
                     </div>
-                    <button type="submit" 
-                        class="w-full inline-block px-6 py-3 border border-black bg-transparent text-xs font-mono uppercase tracking-widest text-black hover:bg-black hover:text-white transition-colors">
-                        Send Resume to Email &rarr;
-                    </button>
-                </form>
+                    
+                    <form action="{{ url_for('send_resume') }}" method="POST" class="space-y-8 mt-auto">
+                        <div class="space-y-3">
+                            <label for="resume-email" class="block font-mono text-xs uppercase tracking-widest text-black">Your Email</label>
+                            <input type="email" id="resume-email" name="email" required
+                                class="w-full border-b border-gray-200 bg-transparent px-0 py-3 text-base text-black placeholder-gray-300 focus:border-black focus:outline-none transition-colors"
+                                placeholder="Enter email to receive resume">
+                        </div>
+                        <button type="submit" 
+                            class="w-full inline-block px-6 py-4 border border-black bg-transparent text-sm font-mono uppercase tracking-widest text-black hover:bg-black hover:text-white transition-colors">
+                            Send Resume to Email &rarr;
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
