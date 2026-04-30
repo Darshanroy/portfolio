@@ -1,0 +1,49 @@
+{% extends "public/layout.html" %}
+
+{% block content %}
+<div class="mx-auto max-w-5xl px-6 py-12">
+    <a href="{{ url_for('public_index') }}" class="mb-12 inline-flex items-center gap-2 text-sm font-mono text-gray-400 hover:text-black transition-colors">
+        &larr; Back to home
+    </a>
+
+    <header class="mb-16 space-y-4">
+        <h1 class="text-6xl font-semibold tracking-tighter">achievements</h1>
+        <p class="text-gray-500 max-w-xl text-lg font-light">
+            Recognitions, certifications, and awards from the industry.
+        </p>
+    </header>
+
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {% for achievement in achievements %}
+        <div class="relative p-8 border border-gray-100 bg-white hover:border-black transition-all group">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity">
+                <span class="font-mono text-[40px] font-bold leading-none select-none">
+                    {{ achievement.date[-2:] if achievement.date else '' }}
+                </span>
+            </div>
+            <div class="space-y-4">
+                <div class="h-6 w-6 rounded-full bg-black/5 flex items-center justify-center">
+                    <div class="h-2 w-2 rounded-full bg-black"></div>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xl font-semibold tracking-tight leading-tight">
+                        {{ achievement.title }}
+                    </h3>
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-gray-400">
+                        {{ achievement.issuer }} &bull; {{ achievement.date }}
+                    </p>
+                </div>
+                <p class="text-sm text-gray-500 leading-relaxed font-light">
+                    {{ achievement.description }}
+                </p>
+                {% if achievement.link_url %}
+                <a href="{{ achievement.link_url }}" target="_blank" class="inline-block mt-2 text-[10px] font-mono uppercase tracking-widest text-black hover:text-gray-500 transition-colors border-b border-black hover:border-gray-500 pb-0.5">
+                    View Certificate &nearr;
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

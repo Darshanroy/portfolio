@@ -1,0 +1,86 @@
+{% extends "public/layout.html" %}
+
+{% block content %}
+<div class="mx-auto max-w-6xl px-6 py-12">
+    <a href="{{ url_for('public_blog_list') }}" class="mb-12 inline-flex items-center gap-2 text-sm font-mono text-gray-400 hover:text-black transition-colors">
+        &larr; Back to blog
+    </a>
+
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_300px]">
+        <!-- Main Content -->
+        <div class="space-y-12">
+            <header class="space-y-6">
+                <div class="flex items-center gap-3">
+                    <span class="px-2 py-0.5 text-[8px] font-mono uppercase tracking-widest border {{ 'border-orange-200 text-orange-600 bg-orange-50/30' if item.type == 'blog' else 'border-blue-200 text-blue-600 bg-blue-50/30' }}">
+                        {{ item.type }}
+                    </span>
+                    <div class="h-[1px] flex-grow bg-gray-50"></div>
+                </div>
+
+                <h1 class="text-6xl font-semibold tracking-tight leading-[1] max-w-3xl">
+                    {{ item.title }}
+                </h1>
+
+                <div class="flex flex-wrap gap-6 pt-4 text-[10px] font-mono uppercase tracking-widest text-gray-400">
+                    <span class="flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg> 
+                        {{ item.date or 'Present' }}
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        {{ item.reading_time or '5 min read' }}
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        Technical Analysis
+                    </span>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {% for section in item.sections %}
+                <div class="flex flex-col gap-6 min-h-[220px] bg-white border border-gray-100/50 p-6">
+                    <h3 class="font-semibold text-sm tracking-wide text-gray-900 border-b border-gray-50 pb-2">{{ section.title }}</h3>
+                    <p class="text-sm leading-relaxed text-gray-600 font-light">
+                        {{ section.content }}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <section class="pt-12 border-t border-gray-50">
+                <div class="rounded-xl bg-gray-50 p-8 border border-gray-100">
+                    <h3 class="text-xl font-medium mb-4">Summary Conclusion</h3>
+                    <p class="text-gray-600 leading-relaxed italic">
+                        "Continuous learning in systems engineering isn't just about collecting tools, but about understanding the fundamental properties of why those tools exist. This deep dive reflects a commitment to architectural rigor."
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="hidden lg:block space-y-12">
+            <div class="sticky top-12 space-y-8">
+                <div class="space-y-4">
+                    <h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Resources</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="hover:underline cursor-pointer">Whitepaper Reference</li>
+                        <li class="hover:underline cursor-pointer">Implementation Repo</li>
+                        <li class="hover:underline cursor-pointer">Benchmarking Suite</li>
+                    </ul>
+                </div>
+
+                <div class="space-y-4 pt-8 border-t border-gray-50">
+                    <h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Share Insight</h4>
+                    <button class="flex items-center gap-2 group">
+                        <div class="p-2 rounded-full border border-gray-200 group-hover:border-black transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share-2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                        </div>
+                        <span class="text-xs group-hover:underline">Copy Link</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

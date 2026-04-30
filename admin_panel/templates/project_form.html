@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl space-y-8">
+    <div class="mb-6 flex items-center justify-between border-b border-gray-100 pb-2">
+        <h2 class="font-mono text-xs uppercase tracking-widest text-gray-400">
+            {% if project %}Edit Project{% else %}New Project{% endif %}
+        </h2>
+        <a href="{{ url_for('admin_index') }}" class="text-[10px] font-mono uppercase tracking-widest text-gray-500 hover:text-black transition-colors">
+            &larr; Back
+        </a>
+    </div>
+
+    <div class="bg-white border border-gray-200 p-8">
+        <form method="POST" action="{% if project %}{{ url_for('edit_project', project_id=project.id) }}{% else %}{{ url_for('new_project') }}{% endif %}" class="space-y-6">
+            
+            {% if not project %}
+            <div class="space-y-2">
+                <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Project ID</label>
+                <input type="text" name="id" required
+                    class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors"
+                    placeholder="e.g. p4">
+            </div>
+            {% endif %}
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Name</label>
+                <input type="text" name="name" value="{{ project.name if project else '' }}" required
+                    class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors"
+                    placeholder="Project Name">
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Summary</label>
+                <textarea name="summary" required rows="3"
+                    class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors resize-none"
+                    placeholder="Short summary of the project">{{ project.summary if project else '' }}</textarea>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Metrics</label>
+                <textarea name="metrics" rows="2"
+                    class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors resize-none"
+                    placeholder="Performance metrics...">{{ project.metrics if project else '' }}</textarea>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Architecture</label>
+                <textarea name="architecture" rows="2"
+                    class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors resize-none"
+                    placeholder="Architecture details...">{{ project.architecture if project else '' }}</textarea>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Failure Handling</label>
+                <textarea name="failure_handling" rows="2"
+                    class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors resize-none"
+                    placeholder="How it handles failures...">{{ project.failure_handling if project else '' }}</textarea>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Tradeoffs</label>
+                <textarea name="tradeoffs" rows="2"
+                    class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors resize-none"
+                    placeholder="Architectural tradeoffs...">{{ project.tradeoffs if project else '' }}</textarea>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Impact</label>
+                <textarea name="impact" rows="2"
+                    class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors resize-none"
+                    placeholder="Business impact...">{{ project.impact if project else '' }}</textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">GitHub URL</label>
+                    <input type="text" name="github_url" value="{{ project.github_url if project else '' }}"
+                        class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors"
+                        placeholder="https://github.com/...">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Live URL</label>
+                    <input type="text" name="live_url" value="{{ project.live_url if project else '' }}"
+                        class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors"
+                        placeholder="https://...">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Chat URL</label>
+                    <input type="text" name="chat_url" value="{{ project.chat_url if project else '' }}"
+                        class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors"
+                        placeholder="#">
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Images (Comma separated URLs)</label>
+                <textarea name="images" rows="2"
+                    class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors resize-none"
+                    placeholder="url1, url2...">{% if project %}{{ ', '.join(project.get_images()) }}{% endif %}</textarea>
+            </div>
+
+            <div class="pt-6 flex justify-end gap-4">
+                <a href="{{ url_for('admin_index') }}" class="px-8 py-3 text-sm font-medium border border-gray-200 text-gray-600 transition-colors hover:border-black hover:text-black">
+                    Cancel
+                </a>
+                <button type="submit" class="bg-black px-8 py-3 text-sm font-medium text-white transition-opacity hover:opacity-90">
+                    Save Project
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

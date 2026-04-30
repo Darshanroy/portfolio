@@ -1,0 +1,123 @@
+{% extends "public/layout.html" %}
+
+{% block content %}
+<div class="mx-auto max-w-6xl px-6 py-12">
+    <a href="{{ url_for('public_index') }}#projects" class="mb-12 inline-flex items-center gap-2 text-sm font-mono text-gray-400 hover:text-black transition-colors">
+        &larr; Back to projects
+    </a>
+
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_300px]">
+        <!-- Left Side: Header & Detail Grid -->
+        <div class="space-y-12">
+            <header class="flex flex-col gap-12 md:flex-row md:items-start md:justify-between">
+                <div class="space-y-2">
+                    <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-gray-400">Project Case Study</span>
+                    <h1 class="text-7xl font-semibold tracking-tight leading-[0.9] max-w-xl">
+                        {{ project.name.lower() }}
+                    </h1>
+                </div>
+                
+                <div class="flex gap-4 self-end md:self-auto">
+                    {% for img in project.get_images()[:3] %}
+                    <div class="group relative h-28 w-28 overflow-hidden bg-gray-50 ring-1 ring-gray-100 transition-all hover:ring-black">
+                        <img 
+                            src="{{ img }}" 
+                            alt="Project sample" 
+                            class="h-full w-full object-cover grayscale opacity-50 transition-all group-hover:grayscale-0 group-hover:opacity-100" 
+                            referrerpolicy="no-referrer"
+                        />
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <span class="font-mono text-[8px] uppercase tracking-tighter text-black/20 group-hover:hidden">sample img</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </header>
+
+            <div class="flex flex-wrap gap-10 py-6 border-y border-gray-100">
+                <a href="{{ project.chat_url or '#' }}" class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.15em] text-gray-500 hover:text-black transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    chat with project
+                </a>
+                <a href="{{ project.github_url or '#' }}" class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.15em] text-gray-500 hover:text-black transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.02c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A4.8 4.8 0 0 0 8 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                    github
+                </a>
+                <a href="{{ project.live_url or '#' }}" class="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.15em] text-gray-500 hover:text-black transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+                    live link
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {% set sections = [
+                    ('The Core Summary', project.summary),
+                    ('Advanced Evaluation Metrics', project.metrics),
+                    ('End-to-End System Architecture', project.architecture),
+                    ('Failure Handling', project.failure_handling),
+                    ('Trade-offs and Decision Making', project.tradeoffs),
+                    ('Deployment and Business Impact', project.impact)
+                ] %}
+                
+                {% for title, content in sections %}
+                <div class="flex flex-col gap-6 min-h-[220px] bg-white/50 border border-gray-100/50 p-6 rounded-none">
+                    <h3 class="font-semibold text-sm tracking-wide text-gray-900 border-b border-gray-50 pb-2">{{ title }}</h3>
+                    <p class="text-sm leading-relaxed text-gray-600 font-light">
+                        {{ content }}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <section class="space-y-8 pt-16">
+                <div class="flex items-center gap-4">
+                    <h3 class="font-mono text-[10px] uppercase tracking-widest text-gray-400 whitespace-nowrap">
+                        comments & feedback
+                    </h3>
+                    <div class="h-[1px] w-full bg-gray-50"></div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-gray-50/30 border border-dashed border-gray-200 p-6">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex items-center gap-2">
+                                <div class="h-2 w-2 rounded-full bg-green-500"></div>
+                                <span class="font-mono text-[10px] uppercase text-gray-400">Community Discussion</span>
+                            </div>
+                            <textarea 
+                                placeholder="Leave a technical question or feedback..." 
+                                class="w-full bg-transparent border-none p-0 text-sm focus:ring-0 resize-none min-h-[100px] outline-none"
+                            ></textarea>
+                            <div class="flex justify-end">
+                                <button class="text-[10px] font-mono uppercase tracking-widest bg-black text-white px-6 py-2 hover:opacity-80 transition-opacity">Post Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Right Side: Meta / Context -->
+        <aside class="hidden lg:block space-y-8">
+            <div class="sticky top-12 space-y-8">
+                <div class="space-y-2">
+                    <h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Date Published</h4>
+                    <p class="text-sm">April 2024</p>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Collaborators</h4>
+                    <p class="text-sm">Open Source Community</p>
+                </div>
+                <div class="space-y-2">
+                    <h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Tags</h4>
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <span class="px-2 py-1 bg-gray-100 text-[10px] font-mono uppercase">Distributed</span>
+                        <span class="px-2 py-1 bg-gray-100 text-[10px] font-mono uppercase">Rust</span>
+                        <span class="px-2 py-1 bg-gray-100 text-[10px] font-mono uppercase">High-Load</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
