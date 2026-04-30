@@ -60,11 +60,18 @@
                 ] %}
                 
                 {% for title, content in sections %}
-                <div class="flex flex-col gap-6 min-h-[220px] bg-white/50 border border-gray-100/50 p-6 rounded-none">
-                    <h3 class="font-semibold text-sm tracking-wide text-gray-900 border-b border-gray-50 pb-2">{{ title }}</h3>
-                    <p class="text-sm leading-relaxed text-gray-600 font-light">
+                <div class="detail-card flex flex-col gap-6 min-h-[220px] bg-white border border-gray-100 p-8 cursor-pointer hover:border-black transition-all group hover:shadow-lg"
+                     data-title="{{ title }}" data-content="{{ content }}">
+                    <div class="flex justify-between items-start">
+                        <h3 class="text-xl font-medium tracking-tight text-gray-900">{{ title }}</h3>
+                        <div class="h-1.5 w-1.5 rounded-full bg-black scale-0 group-hover:scale-100 transition-transform"></div>
+                    </div>
+                    <p class="text-sm leading-relaxed text-gray-500 font-light line-clamp-3">
                         {{ content }}
                     </p>
+                    <div class="mt-auto pt-4 border-t border-gray-50 text-[10px] font-mono uppercase tracking-widest text-gray-400 group-hover:text-black transition-colors">
+                        Click to read more &nearr;
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -120,4 +127,80 @@
         </aside>
     </div>
 </div>
+
+<!-- Modal Container -->
+<div id="detail-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+    <div class="bg-white border border-gray-200 p-10 max-w-2xl w-full mx-6 transform scale-95 transition-transform duration-300 relative shadow-2xl">
+        <button id="close-modal-btn" class="absolute top-6 right-6 text-gray-400 hover:text-black transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <div class="space-y-6">
+            <div class="flex items-center gap-4 mb-2">
+                <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-1 border border-black text-black bg-gray-50/50">
+                    DETAIL
+                </span>
+            </div>
+            <h3 id="modal-title" class="text-3xl font-medium tracking-tight text-black pb-2"></h3>
+            <div class="h-[1px] w-full bg-gray-100"></div>
+            <p id="modal-content" class="text-base sm:text-lg leading-relaxed text-gray-600 font-light"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('detail-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalContent = document.getElementById('modal-content');
+    const closeBtn = document.getElementById('close-modal-btn');
+
+    function openModal(title, content) {
+        modalTitle.textContent = title;
+        modalContent.textContent = content;
+        
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Trigger animations
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            modal.querySelector('div').classList.remove('scale-95');
+            modal.querySelector('div').classList.add('scale-100');
+        }, 10);
+    }
+
+    function closeModal() {
+        modal.classList.add('opacity-0');
+        modal.querySelector('div').classList.add('scale-95');
+        modal.querySelector('div').classList.remove('scale-100');
+        
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 300);
+    }
+
+    document.querySelectorAll('.detail-card').forEach(card => {
+        card.addEventListener('click', () => {
+            openModal(card.dataset.title, card.dataset.content);
+        });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+
+    // Close on click outside
+    modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+});
+</script>
 {% endblock %}
