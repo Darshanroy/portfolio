@@ -50,7 +50,7 @@ def debug_files():
     """Temporary route to verify Vercel has all files. DELETE after confirming."""
     import json
     result = {"BASE_DIR": BASE_DIR, "files": {}}
-    for folder in ["templates", "templates/public", "static"]:
+    for folder in ["templates", "static"]:
         full = os.path.join(BASE_DIR, folder)
         try:
             result["files"][folder] = os.listdir(full)
@@ -67,7 +67,7 @@ async def public_index():
         SupabaseService.get_achievements(),
     )
     return render_template(
-        "public/index.html",
+        "index.html",
         projects=projects,
         skills=skills,
         blogs=blogs,
@@ -79,24 +79,24 @@ async def public_project_detail(project_id):
     project = await SupabaseService.get_project(project_id)
     if not project:
         abort(404)
-    return render_template("public/project_detail.html", project=project)
+    return render_template("project_detail.html", project=project)
 
 @app.route("/learning/<learning_id>")
 async def public_learning_detail(learning_id):
     learning = await SupabaseService.get_skill_with_sections(learning_id)
     if not learning:
         abort(404)
-    return render_template("public/learning_detail.html", learning=learning)
+    return render_template("learning_detail.html", learning=learning)
 
 @app.route("/blog")
 async def public_blog_list():
     blogs = await SupabaseService.get_skills_by_types(["blog", "learning"])
-    return render_template("public/blog_list.html", blogs=blogs)
+    return render_template("blog_list.html", blogs=blogs)
 
 @app.route("/achievements")
 async def public_achievement_list():
     achievements = await SupabaseService.get_achievements()
-    return render_template("public/achievement_list.html", achievements=achievements)
+    return render_template("achievement_list.html", achievements=achievements)
 
 @app.route("/contact", methods=["POST"])
 async def submit_contact():
