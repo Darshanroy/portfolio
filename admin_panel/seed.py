@@ -12,6 +12,7 @@ mock_projects = [
         'failure_handling': 'Achieved end-to-end pipeline trustworthiness with a 4-layer Guardrails AI safety architecture including input filtering, anti-hallucination grounding, and output consistency verification.',
         'tradeoffs': 'Leveraged a multi-agent orchestrated approach over a single monolithic LLM, accepting slight latency increases for a massive gain in domain-specific accuracy and hallucination prevention.',
         'impact': 'Deployed a multilingual production backend via Flask and Telegram Bot integration. Features long-term user memory via mem0 + Supabase, containerized with Docker and live on Hugging Face Spaces.',
+        'tech_stack': 'LangGraph, ChromaDB, FAISS, Flask, Supabase, Docker, Hugging Face',
         'images': json.dumps([
             'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=600',
             'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600',
@@ -30,6 +31,7 @@ mock_projects = [
         'failure_handling': 'Incorporated Human-in-the-Loop doctor review dashboards to safely handle edge cases and AI uncertainty for rural Primary Health Centers. Utilized LlamaParse OCR for Aadhaar verification.',
         'tradeoffs': 'Chose a complex 4 parallel session phases (Intake → Processing → Review → Feedback) design to ensure maximum clinical safety over a simpler direct-response chatbot.',
         'impact': 'Delivered DISHA/ABDM-compliant infrastructure on Supabase (PostgreSQL) with 11 tables, RLS policies, RBAC across 4 roles, and 20+ REST/WebSocket endpoints via FastAPI + Flask.',
+        'tech_stack': 'LangGraph, Google Gemini, Pinecone, FastAPI, Supabase, LlamaParse',
         'images': json.dumps([
             'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=600',
             'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=600',
@@ -46,6 +48,7 @@ mock_projects = [
         'failure_handling': 'Engineered a MongoDB Atlas data layer across 7 collections with compound unique indexes, upsert operations, and ObjectId-based referential integrity to prevent data corruption.',
         'tradeoffs': 'Used MongoDB over PostgreSQL for highly flexible schema requirements inherent in varying hackathon submission structures.',
         'impact': 'Integrated Google Genkit AI for skill-based teammate matching with Zod schema validation. Containerized the full service using Docker & Docker Compose for reproducible deployment.',
+        'tech_stack': 'Flask, MongoDB Atlas, JWT, Google Genkit AI, Docker',
         'images': json.dumps([
             'https://images.unsplash.com/photo-1504868584819-f8e905b68763?auto=format&fit=crop&q=80&w=600',
             'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600',
@@ -106,11 +109,9 @@ mock_achievements = [
 ]
 
 with app.app_context():
-    # Clear existing data
-    db.session.query(SkillSection).delete()
-    db.session.query(Skill).delete()
-    db.session.query(Project).delete()
-    db.session.query(Achievement).delete()
+    # Recreate tables to apply schema changes
+    db.drop_all()
+    db.create_all()
 
     for p in mock_projects:
         project = Project(**p)

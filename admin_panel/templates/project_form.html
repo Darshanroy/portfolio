@@ -72,6 +72,13 @@
                     placeholder="Business impact...">{{ project.impact if project else '' }}</textarea>
             </div>
 
+            <div class="space-y-2">
+                <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Tech Stack</label>
+                <textarea name="tech_stack" rows="2"
+                    class="w-full border-b border-gray-200 py-2 outline-none focus:border-black transition-colors resize-none"
+                    placeholder="Comma separated tools, e.g. Python, Flask, React">{{ project.tech_stack if project else '' }}</textarea>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="space-y-2">
                     <label class="text-[10px] font-mono uppercase tracking-widest text-gray-400">GitHub URL</label>

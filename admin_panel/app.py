@@ -136,6 +136,7 @@ def new_project():
             failure_handling=request.form.get('failure_handling', ''),
             tradeoffs=request.form.get('tradeoffs', ''),
             impact=request.form.get('impact', ''),
+            tech_stack=request.form.get('tech_stack', ''),
             github_url=request.form.get('github_url', ''),
             live_url=request.form.get('live_url', ''),
             chat_url=request.form.get('chat_url', '')
@@ -160,6 +161,7 @@ def edit_project(project_id):
         project.failure_handling = request.form.get('failure_handling', '')
         project.tradeoffs = request.form.get('tradeoffs', '')
         project.impact = request.form.get('impact', '')
+        project.tech_stack = request.form.get('tech_stack', '')
         project.github_url = request.form.get('github_url', '')
         project.live_url = request.form.get('live_url', '')
         project.chat_url = request.form.get('chat_url', '')

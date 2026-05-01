@@ -17,6 +17,7 @@ class Project(db.Model):
     github_url = db.Column(db.String(255))
     live_url = db.Column(db.String(255))
     chat_url = db.Column(db.String(255))
+    tech_stack = db.Column(db.String(500))
     images = db.Column(db.Text)  # JSON string of image URLs
 
     def set_images(self, images_list):
