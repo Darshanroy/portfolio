@@ -24,6 +24,16 @@ def disable_admin_in_prod():
     if os.environ.get("VERCEL") and request.path.startswith("/admin"):
         abort(404)
 
+import traceback
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Log the full error to the terminal
+    print(f"DEBUG ERROR: {str(e)}")
+    traceback.print_exc()
+    # Return the error message to the browser for easy debugging
+    return f"<h1>Internal Server Error</h1><pre>{traceback.format_exc()}</pre>", 500
+
 # ═══════════════════════════════════════════════════════════════════════════
 #  PUBLIC ROUTES (FAST INFERENCE / LOCAL-FIRST)
 # ═══════════════════════════════════════════════════════════════════════════
