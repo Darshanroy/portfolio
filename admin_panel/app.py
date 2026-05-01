@@ -113,6 +113,14 @@ def send_resume():
     return redirect(url_for('public_index') + '#contact')
 
 
+from flask import abort
+
+@app.before_request
+def disable_admin_in_prod():
+    # Disable all admin endpoints in production (Vercel)
+    if os.environ.get('VERCEL') and request.path.startswith('/admin'):
+        abort(404)
+
 # --- ADMIN ROUTES ---
 
 @app.route('/admin')
