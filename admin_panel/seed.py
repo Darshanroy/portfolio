@@ -61,8 +61,15 @@ mock_skills = [
     { 'id': 's3', 'title': 'Vector Databases (ChromaDB, Pinecone)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
     { 'id': 's4', 'title': 'Backend APIs (Flask, FastAPI)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
     { 'id': 's5', 'title': 'Cloud & DevOps (Docker, AWS)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
+    { 'id': 's6', 'title': 'Machine Learning (PyTorch, Scikit-Learn)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
+    { 'id': 's7', 'title': 'Deep Learning & Neural Networks', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
+    { 'id': 's8', 'title': 'NLP & Transformers', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
+    { 'id': 's9', 'title': 'Computer Vision (OpenCV, YOLO)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
+    { 'id': 's10', 'title': 'Model Deployment (ONNX, TensorRT)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
+    { 'id': 's11', 'title': 'Data Engineering (Pandas, SQL)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
     { 
       'id': 'l1', 'title': 'Orchestrating Multi-Agent Systems', 'type': 'learning', 'date': 'April 2024', 'reading_time': '10 min read', 
+
       'sections': [
           {'title': 'The Core Concept', 'content': 'Multi-agent systems utilize multiple specialized LLMs to break down complex tasks. By compartmentalizing logic, hallucinations are reduced and accuracy skyrockets.'},
           {'title': 'Key Logic & Patterns', 'content': 'Implementing state graphs using LangGraph to pass persistent memory between Policy, Eligibility, and Feedback agents.'},

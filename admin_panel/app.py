@@ -81,7 +81,7 @@ def send_resume():
         msg['From'] = SENDER_EMAIL
         msg['To'] = user_email
         msg['Subject'] = "Darshan kumar - Resume"
-        body = "Hello,\n\nThank you for your interest! Please find my resume attached or linked here: [Link to Resume]\n\nBest,\nDarshan kumar"
+        body = f"Hello,\n\nThank you for your interest! Please find my resume online at: {request.host_url}static/Darshan_kumar_r_resume.pdf\n\nBest,\nDarshan Kumar"
         msg.attach(MIMEText(body, 'plain'))
         
         # Create the notification message for the admin
