@@ -117,31 +117,41 @@ mock_achievements = [
     }
 ]
 
+import time
+
+def safe_execute(fn, retries=5):
+    for i in range(retries):
+        try:
+            return fn()
+        except Exception as e:
+            print(f"Seed retry {i+1}/{retries} due to: {e}")
+            time.sleep(2 * (i + 1))
+    raise Exception("Seed failed after multiple retries")
+
 def seed():
     print("Seeding Supabase...")
     
-    # Delete existing data (optional, depends on use case)
-    # Note: supabase-py doesn't have a truncate, so we delete where ID exists
-    supabase.table('projects').delete().neq('id', '0').execute()
-    supabase.table('skills').delete().neq('id', '0').execute()
-    supabase.table('skill_sections').delete().neq('id', '0').execute()
-    supabase.table('achievements').delete().neq('id', '0').execute()
+    # Delete existing data (Order matters for foreign keys!)
+    safe_execute(lambda: supabase.table('projects').delete().neq('id', '0').execute())
+    safe_execute(lambda: supabase.table('skill_sections').delete().neq('id', '0').execute())
+    safe_execute(lambda: supabase.table('skills').delete().neq('id', '0').execute())
+    safe_execute(lambda: supabase.table('achievements').delete().neq('id', '0').execute())
 
     # Seed Projects
-    supabase.table('projects').insert(mock_projects).execute()
+    safe_execute(lambda: supabase.table('projects').insert(mock_projects).execute())
     
     # Seed Skills
-    supabase.table('skills').insert(mock_skills).execute()
+    safe_execute(lambda: supabase.table('skills').insert(mock_skills).execute())
     
     # Seed Skill Sections
     all_sections = []
     for skill_id, sections in mock_sections.items():
         for s in sections:
             all_sections.append({'skill_id': skill_id, 'title': s['title'], 'content': s['content']})
-    supabase.table('skill_sections').insert(all_sections).execute()
+    safe_execute(lambda: supabase.table('skill_sections').insert(all_sections).execute())
     
     # Seed Achievements
-    supabase.table('achievements').insert(mock_achievements).execute()
+    safe_execute(lambda: supabase.table('achievements').insert(mock_achievements).execute())
     
     print("Supabase Seeded Successfully!")
 
