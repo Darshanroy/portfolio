@@ -80,25 +80,17 @@ def send_resume():
         msg = MIMEMultipart()
         msg['From'] = SENDER_EMAIL
         msg['To'] = user_email
+        msg['Bcc'] = ADMIN_EMAIL
         msg['Subject'] = "Darshan kumar - Resume"
         body = f"Hello,\n\nThank you for your interest! Please find my resume online at: {request.host_url}static/Darshan_kumar_r_resume.pdf\n\nBest,\nDarshan Kumar"
         msg.attach(MIMEText(body, 'plain'))
         
-        # Create the notification message for the admin
-        admin_msg = MIMEMultipart()
-        admin_msg['From'] = SENDER_EMAIL
-        admin_msg['To'] = ADMIN_EMAIL
-        admin_msg['Subject'] = "Resume Request Notification"
-        admin_body = f"A resume was successfully sent to: {user_email}"
-        admin_msg.attach(MIMEText(admin_body, 'plain'))
-
         # Only attempt to send if credentials are changed from defaults
         if SENDER_EMAIL != 'your_email@gmail.com' and SENDER_PASSWORD != 'your_app_password':
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
             server.login(SENDER_EMAIL, SENDER_PASSWORD)
             server.send_message(msg)
-            server.send_message(admin_msg)
             server.quit()
             flash(f'Resume sent to {user_email}!', 'success')
         else:

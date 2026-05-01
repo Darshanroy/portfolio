@@ -2,16 +2,27 @@
 
 {% block content %}
 <div class="w-full">
-    <!-- Flash Messages -->
+    <!-- Flash Messages (Toast Notification) -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="space-y-2 mb-8">
+            <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2">
                 {% for category, message in messages %}
-                <div class="p-4 border font-mono text-xs {{ 'border-black bg-black text-white' if category == 'success' else 'border-red-500 bg-red-50 text-red-600' }}">
-                    {{ message }}
+                <div class="toast-message flex items-center justify-between p-4 min-w-[300px] border font-mono text-xs shadow-lg transition-opacity duration-500 {{ 'border-black bg-black text-white' if category == 'success' else 'border-red-500 bg-red-50 text-red-600' }}">
+                    <span>{{ message }}</span>
+                    <button onclick="this.parentElement.style.display='none'" class="ml-4 text-gray-400 hover:text-current">&times;</button>
                 </div>
                 {% endfor %}
             </div>
+            <script>
+                // Auto-dismiss toast after 5 seconds
+                setTimeout(() => {
+                    const container = document.getElementById('toast-container');
+                    if (container) {
+                        container.style.opacity = '0';
+                        setTimeout(() => container.remove(), 500);
+                    }
+                }, 5000);
+            </script>
         {% endif %}
     {% endwith %}
 
@@ -38,8 +49,8 @@
                     <a href="https://github.com/Darshanroy" target="_blank" class="inline-flex items-center justify-center px-5 py-3 border border-gray-200 bg-transparent text-xs font-mono uppercase tracking-widest text-black hover:border-black transition-colors">
                         GitHub &nearr;
                     </a>
-                    <a href="tel:8453036381" class="inline-flex items-center justify-center px-5 py-3 border border-gray-200 bg-transparent text-xs font-mono uppercase tracking-widest text-black hover:border-black transition-colors">
-                        +91 8453036381 &nearr;
+                    <a href="https://wa.me/918453036381" target="_blank" class="inline-flex items-center justify-center px-5 py-3 border border-gray-200 bg-transparent text-xs font-mono uppercase tracking-widest text-black hover:border-black transition-colors">
+                        WhatsApp &nearr;
                     </a>
                     <a href="{{ url_for('static', filename='Darshan_kumar_r_resume.pdf') }}" target="_blank" class="inline-flex items-center justify-center px-5 py-3 border border-gray-200 bg-transparent text-xs font-mono uppercase tracking-widest text-black hover:border-black transition-colors">
                         View Resume &darr;
