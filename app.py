@@ -13,7 +13,9 @@ from supabase import create_client, Client
 # ---------------------------------------------------------------------------
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, 
+            template_folder=os.path.abspath('templates'),
+            static_folder=os.path.abspath('static'))
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev_secret_key")
 
 # ---------------------------------------------------------------------------
