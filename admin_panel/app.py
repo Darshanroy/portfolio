@@ -5,7 +5,10 @@ from models import db, Project, Skill, SkillSection, Achievement, ContactMessage
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dotenv import load_dotenv
 import os
+
+load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
