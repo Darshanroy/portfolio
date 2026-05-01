@@ -5,6 +5,7 @@
       "use": "@vercel/python"
     }
   ],
+  "regions": ["syd1"],
   "routes": [
     {
       "src": "/(.*)",
