@@ -1,6 +1,13 @@
+import os
 import json
-from app import app
-from models import db, Project, Skill, SkillSection, Achievement
+from supabase import create_client, Client
+from dotenv import load_dotenv
+
+load_dotenv()
+
+url: str = os.environ.get("SUPABASE_URL")
+key: str = os.environ.get("SUPABASE_KEY")
+supabase: Client = create_client(url, key)
 
 mock_projects = [
     {
@@ -59,36 +66,38 @@ mock_projects = [
 ]
 
 mock_skills = [
-    { 'id': 's1', 'title': 'LLM Fine-Tuning (QLoRA, PEFT)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
-    { 'id': 's2', 'title': 'AI Agents (LangGraph, CrewAI)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
-    { 'id': 's3', 'title': 'Vector Databases (ChromaDB, Pinecone)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
-    { 'id': 's4', 'title': 'Backend APIs (Flask, FastAPI)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
-    { 'id': 's5', 'title': 'Cloud & DevOps (Docker, AWS)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
-    { 'id': 's6', 'title': 'Machine Learning (PyTorch, Scikit-Learn)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
-    { 'id': 's7', 'title': 'Deep Learning & Neural Networks', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
-    { 'id': 's8', 'title': 'NLP & Transformers', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
-    { 'id': 's9', 'title': 'Computer Vision (OpenCV, YOLO)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
-    { 'id': 's11', 'title': 'Data Engineering (Pandas, SQL)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
+    { 'id': 's1', 'title': 'LLM Fine-Tuning (QLoRA, PEFT)', 'type': 'skill', 'date': '', 'reading_time': '' },
+    { 'id': 's2', 'title': 'AI Agents (LangGraph, CrewAI)', 'type': 'skill', 'date': '', 'reading_time': '' },
+    { 'id': 's3', 'title': 'Vector Databases (ChromaDB, Pinecone)', 'type': 'skill', 'date': '', 'reading_time': '' },
+    { 'id': 's4', 'title': 'Backend APIs (Flask, FastAPI)', 'type': 'skill', 'date': '', 'reading_time': '' },
+    { 'id': 's5', 'title': 'Cloud & DevOps (Docker, AWS)', 'type': 'skill', 'date': '', 'reading_time': '' },
+    { 'id': 's6', 'title': 'Machine Learning (PyTorch, Scikit-Learn)', 'type': 'skill', 'date': '', 'reading_time': '' },
+    { 'id': 's7', 'title': 'Deep Learning & Neural Networks', 'type': 'skill', 'date': '', 'reading_time': '' },
+    { 'id': 's8', 'title': 'NLP & Transformers', 'type': 'skill', 'date': '', 'reading_time': '' },
+    { 'id': 's9', 'title': 'Computer Vision (OpenCV, YOLO)', 'type': 'skill', 'date': '', 'reading_time': '' },
+    { 'id': 's11', 'title': 'Data Engineering (Pandas, SQL)', 'type': 'skill', 'date': '', 'reading_time': '' },
     { 
-      'id': 'l1', 'title': 'Orchestrating Multi-Agent Systems', 'type': 'learning', 'date': 'April 2024', 'reading_time': '10 min read', 
-
-      'sections': [
-          {'title': 'The Core Concept', 'content': 'Multi-agent systems utilize multiple specialized LLMs to break down complex tasks. By compartmentalizing logic, hallucinations are reduced and accuracy skyrockets.'},
-          {'title': 'Key Logic & Patterns', 'content': 'Implementing state graphs using LangGraph to pass persistent memory between Policy, Eligibility, and Feedback agents.'},
-          {'title': 'Implementation Details', 'content': 'Built a 5-agent pipeline for Jan Sahayak utilizing Agentic RAG and real-time observability via OpenTelemetry.'},
-          {'title': 'Key Challenges', 'content': 'Ensuring safe outputs in a clinical or government setting. Solved via a 4-layer Guardrails AI safety architecture.'}
-      ]
+      'id': 'l1', 'title': 'Orchestrating Multi-Agent Systems', 'type': 'learning', 'date': 'April 2024', 'reading_time': '10 min read'
     },
     { 
-      'id': 'b1', 'title': 'Optimizing LLMs with PEFT', 'type': 'blog', 'date': 'November 2024', 'reading_time': '8 min read',
-      'sections': [
-          {'title': 'The Core Thesis', 'content': 'Full fine-tuning of 3B+ parameter models requires massive VRAM. Parameter-Efficient Fine-Tuning (PEFT) is the key to local AI.'},
-          {'title': 'Advanced Metrics', 'content': 'Achieved a 60% reduction in GPU memory usage compared to full fine-tuning on Qwen-3B using Amazon SageMaker.'},
-          {'title': 'System Architecture', 'content': 'LoRA freezes pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture.'},
-          {'title': 'Deployment Impact', 'content': 'Successfully optimized training for K–8 educational models across 3–6 epochs.'}
-      ]
+      'id': 'b1', 'title': 'Optimizing LLMs with PEFT', 'type': 'blog', 'date': 'November 2024', 'reading_time': '8 min read'
     }
 ]
+
+mock_sections = {
+    'l1': [
+        {'title': 'The Core Concept', 'content': 'Multi-agent systems utilize multiple specialized LLMs to break down complex tasks. By compartmentalizing logic, hallucinations are reduced and accuracy skyrockets.'},
+        {'title': 'Key Logic & Patterns', 'content': 'Implementing state graphs using LangGraph to pass persistent memory between Policy, Eligibility, and Feedback agents.'},
+        {'title': 'Implementation Details', 'content': 'Built a 5-agent pipeline for Jan Sahayak utilizing Agentic RAG and real-time observability via OpenTelemetry.'},
+        {'title': 'Key Challenges', 'content': 'Ensuring safe outputs in a clinical or government setting. Solved via a 4-layer Guardrails AI safety architecture.'}
+    ],
+    'b1': [
+        {'title': 'The Core Thesis', 'content': 'Full fine-tuning of 3B+ parameter models requires massive VRAM. Parameter-Efficient Fine-Tuning (PEFT) is the key to local AI.'},
+        {'title': 'Advanced Metrics', 'content': 'Achieved a 60% reduction in GPU memory usage compared to full fine-tuning on Qwen-3B using Amazon SageMaker.'},
+        {'title': 'System Architecture', 'content': 'LoRA freezes pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture.'},
+        {'title': 'Deployment Impact', 'content': 'Successfully optimized training for K–8 educational models across 3–6 epochs.'}
+    ]
+}
 
 mock_achievements = [
     {
@@ -108,25 +117,33 @@ mock_achievements = [
     }
 ]
 
-with app.app_context():
-    # Recreate tables to apply schema changes
-    db.drop_all()
-    db.create_all()
+def seed():
+    print("Seeding Supabase...")
+    
+    # Delete existing data (optional, depends on use case)
+    # Note: supabase-py doesn't have a truncate, so we delete where ID exists
+    supabase.table('projects').delete().neq('id', '0').execute()
+    supabase.table('skills').delete().neq('id', '0').execute()
+    supabase.table('skill_sections').delete().neq('id', '0').execute()
+    supabase.table('achievements').delete().neq('id', '0').execute()
 
-    for p in mock_projects:
-        project = Project(**p)
-        db.session.add(project)
+    # Seed Projects
+    supabase.table('projects').insert(mock_projects).execute()
+    
+    # Seed Skills
+    supabase.table('skills').insert(mock_skills).execute()
+    
+    # Seed Skill Sections
+    all_sections = []
+    for skill_id, sections in mock_sections.items():
+        for s in sections:
+            all_sections.append({'skill_id': skill_id, 'title': s['title'], 'content': s['content']})
+    supabase.table('skill_sections').insert(all_sections).execute()
+    
+    # Seed Achievements
+    supabase.table('achievements').insert(mock_achievements).execute()
+    
+    print("Supabase Seeded Successfully!")
 
-    for s in mock_skills:
-        sections = s.pop('sections')
-        skill = Skill(**s)
-        db.session.add(skill)
-        db.session.flush() # Get skill ID
-        for sec in sections:
-            db.session.add(SkillSection(skill_id=skill.id, title=sec['title'], content=sec['content']))
-
-    for a in mock_achievements:
-        db.session.add(Achievement(**a))
-
-    db.session.commit()
-    print("Mock data seeded successfully!")
+if __name__ == "__main__":
+    seed()
