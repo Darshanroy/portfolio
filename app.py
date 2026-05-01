@@ -45,6 +45,19 @@ def disable_admin_in_prod():
 #  PUBLIC ROUTES (FAST INFERENCE / LOCAL-FIRST)
 # ═══════════════════════════════════════════════════════════════════════════
 
+@app.route("/debug-files")
+def debug_files():
+    """Temporary route to verify Vercel has all files. DELETE after confirming."""
+    import json
+    result = {"BASE_DIR": BASE_DIR, "files": {}}
+    for folder in ["templates", "templates/public", "static"]:
+        full = os.path.join(BASE_DIR, folder)
+        try:
+            result["files"][folder] = os.listdir(full)
+        except FileNotFoundError:
+            result["files"][folder] = "NOT FOUND"
+    return f"<pre>{json.dumps(result, indent=2)}</pre>"
+
 @app.route("/")
 async def public_index():
     projects, skills, blogs, achievements = await asyncio.gather(
