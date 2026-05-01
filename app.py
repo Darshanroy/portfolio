@@ -80,13 +80,29 @@ def disable_admin_in_prod():
 
 @app.route('/test-db')
 def test_db():
+    output = []
+    # 1. Check Supabase
     try:
         supabase = get_supabase()
-        # Test query
         res = supabase.table('projects').select('count', count='exact').execute()
-        return f"SUCCESS: Connected to Supabase. Found {res.count} projects."
+        output.append(f"SUCCESS: Supabase Connected. Found {res.count} projects.")
     except Exception as e:
-        return f"ERROR: {str(e)}", 500
+        output.append(f"ERROR: Supabase: {str(e)}")
+    
+    # 2. Check Templates
+    template_path = os.path.join(app.root_path, 'templates', 'public', 'index.html')
+    exists = os.path.exists(template_path)
+    output.append(f"TEMPLATE CHECK: {template_path} exists? {exists}")
+    
+    # 3. List templates dir
+    try:
+        t_dir = os.path.join(app.root_path, 'templates')
+        files = os.listdir(t_dir) if os.path.exists(t_dir) else "DIR NOT FOUND"
+        output.append(f"TEMPLATES DIR CONTENTS: {files}")
+    except Exception as e:
+        output.append(f"TEMPLATES DIR ERROR: {str(e)}")
+
+    return "<br>".join(output)
 
 @app.route("/")
 def public_index():
