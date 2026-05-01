@@ -18,12 +18,15 @@ class Project(db.Model):
     live_url = db.Column(db.String(255))
     chat_url = db.Column(db.String(255))
     tech_stack = db.Column(db.String(500))
-    images = db.Column(db.Text)  # JSON string of image URLs
+    # Refactored for Supabase: Native JSON support
+    images = db.Column(db.JSON) 
 
     def set_images(self, images_list):
-        self.images = json.dumps(images_list)
+        self.images = images_list
 
     def get_images(self):
+        if isinstance(self.images, list):
+            return self.images
         return json.loads(self.images) if self.images else []
 
 class Skill(db.Model):

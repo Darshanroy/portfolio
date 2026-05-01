@@ -1,27 +1,39 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_migrate import Migrate
-from models import db, Project, Skill, SkillSection, Achievement, ContactMessage
+from models import db, Project, Skill, Achievement, ContactMessage
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
-import os
 
 load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
+
 # Use DATABASE_URL if available, else fallback to SQLite
 db_url = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'admin.db'))
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'dev_secret_key'
 
+# Supabase/Postgres Production Optimizations
+if db_url.startswith("postgresql"):
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        "pool_size": 10,
+        "max_overflow": 20,
+        "pool_recycle": 300,
+        "pool_pre_ping": True,
+        "connect_args": {
+            "sslmode": "require",
+            "connect_timeout": 10
+        }
+    }
+
 db.init_app(app)
-migrate = Migrate(app, db)
 
 # --- PUBLIC ROUTES ---
 
@@ -77,13 +89,11 @@ def send_resume():
         flash('Please enter your email.', 'error')
         return redirect(url_for('public_index') + '#contact')
         
-    # Email configuration - User needs to set these in their environment or .env
     SENDER_EMAIL = os.environ.get('MAIL_USERNAME', 'your_email@gmail.com')
     SENDER_PASSWORD = os.environ.get('MAIL_PASSWORD', 'your_app_password')
     ADMIN_EMAIL = 'Darshankumarr03@gmail.com'
     
     try:
-        # Create the message for the user
         msg = MIMEMultipart()
         msg['From'] = SENDER_EMAIL
         msg['To'] = user_email
@@ -92,7 +102,6 @@ def send_resume():
         body = f"Hello,\n\nThank you for your interest! Please find my resume online at: {request.host_url}static/Darshan_kumar_r_resume.pdf\n\nBest,\nDarshan Kumar"
         msg.attach(MIMEText(body, 'plain'))
         
-        # Only attempt to send if credentials are changed from defaults
         if SENDER_EMAIL != 'your_email@gmail.com' and SENDER_PASSWORD != 'your_app_password':
             server = smtplib.SMTP('smtp.gmail.com', 587)
             server.starttls()
@@ -101,9 +110,6 @@ def send_resume():
             server.quit()
             flash(f'Resume sent to {user_email}!', 'success')
         else:
-            # Mock success if no credentials provided so UI still works
-            print(f"[MOCK EMAIL] Sent resume to {user_email}")
-            print(f"[MOCK EMAIL] Notified {ADMIN_EMAIL}")
             flash(f'Resume sent to {user_email}! (Mocked - configure SMTP in app.py)', 'success')
             
     except Exception as e:
@@ -112,12 +118,10 @@ def send_resume():
 
     return redirect(url_for('public_index') + '#contact')
 
-
 from flask import abort
 
 @app.before_request
 def disable_admin_in_prod():
-    # Disable all admin endpoints in production (Vercel)
     if os.environ.get('VERCEL') and request.path.startswith('/admin'):
         abort(404)
 
