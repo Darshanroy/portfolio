@@ -82,22 +82,42 @@ def disable_admin_in_prod():
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-#  PUBLIC ROUTES
+#  DIAGNOSTICS & PUBLIC ROUTES
 # ═══════════════════════════════════════════════════════════════════════════
+
+@app.route('/test-db')
+def test_db():
+    try:
+        if not SUPABASE_URL:
+            return "ERROR: SUPABASE_URL is missing from environment variables.", 500
+        if not SUPABASE_KEY:
+            return "ERROR: SUPABASE_KEY is missing from environment variables.", 500
+        
+        # Test query
+        res = supabase.table('projects').select('count', count='exact').execute()
+        return f"SUCCESS: Connected to Supabase. Found {res.count} projects."
+    except Exception as e:
+        return f"ERROR: Could not connect to Supabase: {str(e)}", 500
 
 @app.route("/")
 def public_index():
-    projects = _rows("projects")
-    skills = _rows("skills", lambda q: q.eq("type", "skill"))
-    blogs = _rows("skills", lambda q: q.in_("type", ["blog", "learning"]))
-    achievements = _rows("achievements")
-    return render_template(
-        "public/index.html",
-        projects=projects,
-        skills=skills,
-        blogs=blogs,
-        achievements=achievements,
-    )
+    try:
+        projects = _rows("projects")
+        skills = _rows("skills", lambda q: q.eq("type", "skill"))
+        blogs = _rows("skills", lambda q: q.in_("type", ["blog", "learning"]))
+        achievements = _rows("achievements")
+        return render_template(
+            "public/index.html",
+            projects=projects,
+            skills=skills,
+            blogs=blogs,
+            achievements=achievements,
+        )
+    except Exception as e:
+        # In production, show a slightly better error or at least the message for debugging
+        if os.environ.get("VERCEL"):
+            return f"<h1>Database Connection Error</h1><p>The application could not reach Supabase. Please ensure your <b>SUPABASE_URL</b> and <b>SUPABASE_KEY</b> are correctly set in the Vercel Dashboard.</p><p>Technical details: {str(e)}</p>", 500
+        raise e
 
 
 @app.route("/project/<project_id>")
