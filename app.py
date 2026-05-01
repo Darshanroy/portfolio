@@ -13,9 +13,7 @@ from database import SupabaseService
 # ---------------------------------------------------------------------------
 load_dotenv()
 
-app = Flask(__name__, 
-            template_folder=os.path.abspath('templates'),
-            static_folder=os.path.abspath('static'))
+app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev_secret_key")
 
 # ---------------------------------------------------------------------------
@@ -32,27 +30,22 @@ def disable_admin_in_prod():
 
 @app.route("/")
 async def public_index():
-    try:
-        # High-Speed Parallel Fetching
-        # Now extremely fast as it uses the Data Store by default
-        projects, skills, blogs, achievements = await asyncio.gather(
-            SupabaseService.get_projects(),
-            SupabaseService.get_skills(skill_type="skill"),
-            SupabaseService.get_skills_by_types(["blog", "learning"]),
-            SupabaseService.get_achievements()
-        )
+    # High-Speed Parallel Fetching
+    # Now extremely fast as it uses the Data Store by default
+    projects, skills, blogs, achievements = await asyncio.gather(
+        SupabaseService.get_projects(),
+        SupabaseService.get_skills(skill_type="skill"),
+        SupabaseService.get_skills_by_types(["blog", "learning"]),
+        SupabaseService.get_achievements()
+    )
 
-        return render_template(
-            "public/index.html",
-            projects=projects,
-            skills=skills,
-            blogs=blogs,
-            achievements=achievements,
-        )
-    except Exception as e:
-        if os.environ.get("VERCEL"):
-            return f"<h1>Service Temporarily Unavailable</h1><p>{str(e)}</p>", 500
-        raise e
+    return render_template(
+        "public/index.html",
+        projects=projects,
+        skills=skills,
+        blogs=blogs,
+        achievements=achievements,
+    )
 
 @app.route("/project/<project_id>")
 async def public_project_detail(project_id):
