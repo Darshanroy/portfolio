@@ -64,6 +64,10 @@ class SupabaseService:
         return [s for s in ds.SKILLS if s.type in types]
 
     @classmethod
+    async def get_skill_with_sections(cls, skill_id: str) -> Optional[ds.Skill]:
+        return next((s for s in ds.SKILLS if s.id == skill_id), None)
+
+    @classmethod
     async def get_achievements(cls) -> List[ds.Achievement]:
         return ds.ACHIEVEMENTS
 

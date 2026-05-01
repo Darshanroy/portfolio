@@ -1,6 +1,7 @@
 import os
 import asyncio
 import smtplib
+import traceback
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
@@ -13,8 +14,24 @@ from database import SupabaseService
 # ---------------------------------------------------------------------------
 load_dotenv()
 
-app = Flask(__name__)
+# Resolve paths relative to THIS file — critical for Vercel (/var/task/)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static"),
+)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev_secret_key")
+
+# ---------------------------------------------------------------------------
+# Global Error Handler (shows full traceback on Vercel)
+# ---------------------------------------------------------------------------
+@app.errorhandler(Exception)
+def handle_exception(e):
+    tb = traceback.format_exc()
+    print(f"ERROR: {e}\n{tb}")
+    return f"<h1>Error</h1><pre>{tb}</pre>", 500
 
 # ---------------------------------------------------------------------------
 # Production guard – block /admin on Vercel
@@ -24,31 +41,18 @@ def disable_admin_in_prod():
     if os.environ.get("VERCEL") and request.path.startswith("/admin"):
         abort(404)
 
-import traceback
-
-@app.errorhandler(Exception)
-def handle_exception(e):
-    # Log the full error to the terminal
-    print(f"DEBUG ERROR: {str(e)}")
-    traceback.print_exc()
-    # Return the error message to the browser for easy debugging
-    return f"<h1>Internal Server Error</h1><pre>{traceback.format_exc()}</pre>", 500
-
 # ═══════════════════════════════════════════════════════════════════════════
 #  PUBLIC ROUTES (FAST INFERENCE / LOCAL-FIRST)
 # ═══════════════════════════════════════════════════════════════════════════
 
 @app.route("/")
 async def public_index():
-    # High-Speed Parallel Fetching
-    # Now extremely fast as it uses the Data Store by default
     projects, skills, blogs, achievements = await asyncio.gather(
         SupabaseService.get_projects(),
         SupabaseService.get_skills(skill_type="skill"),
         SupabaseService.get_skills_by_types(["blog", "learning"]),
-        SupabaseService.get_achievements()
+        SupabaseService.get_achievements(),
     )
-
     return render_template(
         "public/index.html",
         projects=projects,
@@ -87,28 +91,34 @@ async def submit_contact():
     email = request.form.get("email")
     message = request.form.get("message")
     if name and email and message:
-        # Async background push to Supabase
         await SupabaseService.add_contact_message(name, email, message)
         flash("Message received! Thank you.", "success")
     return redirect(url_for("public_index") + "#contact")
 
+# ---------------------------------------------------------------------------
+# SMTP Resume Delivery
+# ---------------------------------------------------------------------------
 def _send_email_sync(user_email):
-    """Synchronous email sending logic."""
+    """Synchronous email sending (runs in a thread to avoid blocking)."""
     sender_email = os.environ.get("MAIL_USERNAME")
     sender_password = os.environ.get("MAIL_PASSWORD")
-    if not sender_email or not sender_password: return False, "Config error"
+    if not sender_email or not sender_password:
+        return False, "Mail config missing"
 
     msg = MIMEMultipart()
-    msg['From'] = f"Darshan Kumar <{sender_email}>"
-    msg['To'] = user_email
-    msg['Subject'] = "Resume Request - Darshan Kumar"
-    msg.attach(MIMEText("Hello,\n\nPlease find the requested resume attached.\n\nBest,\nDarshan", 'plain'))
+    msg["From"] = f"Darshan Kumar <{sender_email}>"
+    msg["To"] = user_email
+    msg["Subject"] = "Resume — Darshan Kumar"
+    msg.attach(MIMEText(
+        "Hello,\n\nPlease find the requested resume attached.\n\nBest,\nDarshan",
+        "plain",
+    ))
 
-    pdf_path = os.path.join(os.path.dirname(__file__), "Darshan kumar r.pdf")
+    pdf_path = os.path.join(BASE_DIR, "Darshan kumar r.pdf")
     if os.path.exists(pdf_path):
         with open(pdf_path, "rb") as f:
             part = MIMEApplication(f.read(), Name=os.path.basename(pdf_path))
-            part['Content-Disposition'] = f'attachment; filename="{os.path.basename(pdf_path)}"'
+            part["Content-Disposition"] = f'attachment; filename="{os.path.basename(pdf_path)}"'
             msg.attach(part)
 
     try:
@@ -116,16 +126,22 @@ def _send_email_sync(user_email):
             server.login(sender_email, sender_password)
             server.send_message(msg)
         return True, "Success"
-    except Exception as e: return False, str(e)
+    except Exception as e:
+        return False, str(e)
 
 @app.route("/send_resume", methods=["POST"])
 async def send_resume():
     user_email = request.form.get("email")
     if user_email:
         success, error = await asyncio.to_thread(_send_email_sync, user_email)
-        if success: flash(f"Resume sent to {user_email}", "success")
-        else: flash(f"Error: {error}", "danger")
+        if success:
+            flash(f"Resume sent to {user_email}", "success")
+        else:
+            flash(f"Error: {error}", "danger")
     return redirect(url_for("public_index") + "#contact")
 
+# ---------------------------------------------------------------------------
+# Local dev server
+# ---------------------------------------------------------------------------
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
