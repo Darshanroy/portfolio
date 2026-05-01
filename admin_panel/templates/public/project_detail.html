@@ -107,21 +107,28 @@
         <!-- Right Side: Meta / Context -->
         <aside class="hidden lg:block space-y-8">
             <div class="sticky top-12 space-y-8">
-                <div class="space-y-2">
-                    <h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Date Published</h4>
-                    <p class="text-sm">April 2024</p>
-                </div>
-                <div class="space-y-2">
-                    <h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Collaborators</h4>
-                    <p class="text-sm">Open Source Community</p>
-                </div>
-                <div class="space-y-2">
-                    <h4 class="text-[10px] font-mono uppercase tracking-widest text-gray-400">Tags</h4>
-                    <div class="flex flex-wrap gap-2 pt-1">
-                        <span class="px-2 py-1 bg-gray-100 text-[10px] font-mono uppercase">Distributed</span>
-                        <span class="px-2 py-1 bg-gray-100 text-[10px] font-mono uppercase">Rust</span>
-                        <span class="px-2 py-1 bg-gray-100 text-[10px] font-mono uppercase">High-Load</span>
+                <!-- Auto Resume Box -->
+                <div class="border border-gray-100 bg-white p-8 flex flex-col group hover:border-black transition-colors duration-300">
+                    <div class="flex justify-between items-start mb-6">
+                        <h3 class="text-2xl font-medium tracking-tight leading-tight">Request Resume</h3>
+                        <div class="h-1.5 w-1.5 rounded-full bg-black scale-0 group-hover:scale-100 transition-transform"></div>
                     </div>
+                    <p class="text-sm text-gray-500 leading-relaxed font-light mb-8">
+                        Enter your email address below to instantly receive a copy of my technical resume via automated email.
+                    </p>
+                    
+                    <form action="{{ url_for('send_resume') }}" method="POST" class="space-y-6">
+                        <div class="space-y-2">
+                            <label for="resume-email-sidebar" class="block font-mono text-[10px] uppercase tracking-widest text-gray-400">Your Email</label>
+                            <input type="email" id="resume-email-sidebar" name="email" required
+                                class="w-full border-b border-gray-200 bg-transparent px-0 py-2 text-sm text-black placeholder-gray-300 focus:border-black focus:outline-none transition-colors"
+                                placeholder="name@example.com">
+                        </div>
+                        <button type="submit" 
+                            class="w-full inline-block px-4 py-3 border border-black bg-transparent text-xs font-mono uppercase tracking-widest text-black hover:bg-black hover:text-white transition-colors">
+                            Send to Gmail &rarr;
+                        </button>
+                    </form>
                 </div>
             </div>
         </aside>

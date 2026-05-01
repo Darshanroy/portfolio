@@ -65,7 +65,6 @@ mock_skills = [
     { 'id': 's7', 'title': 'Deep Learning & Neural Networks', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
     { 'id': 's8', 'title': 'NLP & Transformers', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
     { 'id': 's9', 'title': 'Computer Vision (OpenCV, YOLO)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
-    { 'id': 's10', 'title': 'Model Deployment (ONNX, TensorRT)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
     { 'id': 's11', 'title': 'Data Engineering (Pandas, SQL)', 'type': 'skill', 'date': '', 'reading_time': '', 'sections': [] },
     { 
       'id': 'l1', 'title': 'Orchestrating Multi-Agent Systems', 'type': 'learning', 'date': 'April 2024', 'reading_time': '10 min read', 
